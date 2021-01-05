@@ -10,7 +10,7 @@
 @interface DemoWidgetViewController ()
 @property (weak, nonatomic) IBOutlet UIStackView *stackView;
 @property (weak, nonatomic) IBOutlet UIButton *btnToggle;
-@property (weak, nonatomic) IBOutlet UILabel *lblHelloWorld;
+@property (weak, nonatomic) IBOutlet UILabel *lblToggled;
 
 @end
 
@@ -30,7 +30,7 @@
 }
 
 - (IBAction)onTogglePress:(id)sender {
-  self.lblHelloWorld.hidden = !self.lblHelloWorld.isHidden;
+  self.lblToggled.hidden = !self.lblToggled.isHidden;
 }
 
 @end

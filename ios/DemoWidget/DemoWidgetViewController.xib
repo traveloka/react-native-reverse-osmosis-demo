@@ -11,7 +11,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="DemoWidgetViewController">
             <connections>
                 <outlet property="btnToggle" destination="RIg-26-Xat" id="A9O-x8-PPP"/>
-                <outlet property="lblHelloWorld" destination="Ebz-Q4-EIG" id="uKQ-fP-dpd"/>
+                <outlet property="lblToggled" destination="Ebz-Q4-EIG" id="FeW-85-dPG"/>
                 <outlet property="stackView" destination="fAd-rY-PDA" id="eeM-9O-rJ3"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
