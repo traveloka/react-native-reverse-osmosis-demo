@@ -12,7 +12,6 @@ import com.reverseosmosisdemo.R;
 public class DemoWidget extends LinearLayout {
     private Button btnToggle;
     private TextView txtToggled;
-    private DemoWidgetListener listener;
 
     public DemoWidget(Context context) {
         super(context);
@@ -32,13 +31,6 @@ public class DemoWidget extends LinearLayout {
     private void setUpAction() {
         btnToggle.setOnClickListener(view -> {
             txtToggled.setVisibility(txtToggled.getVisibility() == GONE ? VISIBLE : GONE);
-            if (listener != null) {
-                listener.onToggleClick();
-            }
         });
-    }
-
-    public void setListener(DemoWidgetListener listener) {
-        this.listener = listener;
     }
 }
