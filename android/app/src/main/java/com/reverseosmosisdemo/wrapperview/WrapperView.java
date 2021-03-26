@@ -47,16 +47,13 @@ public class WrapperView extends LinearLayout {
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int widthSpec = widthMeasureSpec;
-        int heightSpec = MeasureSpec.UNSPECIFIED;
-
         int maxWidth = 0;
         int maxHeight = 0;
 
         for (int i = 0; i < getChildCount(); i++) {
             View child = getChildAt(i);
             if (child.getVisibility() != GONE) {
-                child.measure(widthSpec, heightSpec);
+                child.measure(widthMeasureSpec, MeasureSpec.UNSPECIFIED);
 
                 maxWidth = Math.max(maxWidth, child.getMeasuredWidth());
                 maxHeight = Math.max(maxHeight, child.getMeasuredHeight());
