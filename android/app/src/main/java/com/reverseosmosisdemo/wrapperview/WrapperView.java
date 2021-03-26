@@ -10,32 +10,48 @@ import androidx.annotation.RequiresApi;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.UIManagerModule;
 
+import java.lang.ref.WeakReference;
+
 public class WrapperView extends LinearLayout {
-    private int mWidthMeasureSpec = MeasureSpec.UNSPECIFIED;
-    private int mHeightMeasureSpec = MeasureSpec.UNSPECIFIED;
+    private WeakReference<UIManagerModule> _uiManagerModule;
 
     public WrapperView(Context context) {
         super(context);
+
+        _uiManagerModule = new WeakReference<>(((ThemedReactContext)getContext()).getNativeModule(UIManagerModule.class));
+    }
+
+    private UIManagerModule getUIManagerModule() {
+        return _uiManagerModule.get();
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        requestLayout();
     }
 
     @Override
     public void requestLayout() {
         super.requestLayout();
-
-        // workaround to trigger onMeasure when requestLayout invoked
-        this.measure(mWidthMeasureSpec, mHeightMeasureSpec);
+        post(measureAndLayout);
     }
+
+    private final Runnable measureAndLayout = () -> {
+        measure(
+            MeasureSpec.makeMeasureSpec(getMeasuredWidth(), MeasureSpec.EXACTLY),
+            MeasureSpec.makeMeasureSpec(getMeasuredHeight(), MeasureSpec.EXACTLY));
+        layout(getLeft(), getTop(), getLeft() + getMeasuredWidth(), getTop() + getMeasuredHeight());
+    };
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        int widthSpec = widthMeasureSpec;
+        int heightSpec = MeasureSpec.UNSPECIFIED;
+
         int maxWidth = 0;
         int maxHeight = 0;
-
-        mWidthMeasureSpec = widthMeasureSpec;
-
-        int widthSpec = mWidthMeasureSpec;
-        int heightSpec = mHeightMeasureSpec;
 
         for (int i = 0; i < getChildCount(); i++) {
             View child = getChildAt(i);
@@ -44,15 +60,13 @@ public class WrapperView extends LinearLayout {
 
                 maxWidth = Math.max(maxWidth, child.getMeasuredWidth());
                 maxHeight = Math.max(maxHeight, child.getMeasuredHeight());
-
-                ThemedReactContext reactContext = (ThemedReactContext) getContext();
-                reactContext.runOnNativeModulesQueueThread(() -> reactContext.getNativeModule(UIManagerModule.class).updateNodeSize(getId(), child.getMeasuredWidth(), child.getMeasuredHeight()));
             }
         }
 
-        maxWidth = Math.max(maxWidth, getSuggestedMinimumWidth());
-        maxHeight = Math.max(maxHeight, getSuggestedMinimumHeight());
+        int finalWidth = Math.max(maxWidth, getSuggestedMinimumWidth());
+        int finalHeight = Math.max(maxHeight, getSuggestedMinimumHeight());
 
-        setMeasuredDimension(maxWidth, maxHeight);
+        setMeasuredDimension(finalWidth, finalHeight);
+        ((ThemedReactContext)getContext()).runOnNativeModulesQueueThread(() -> getUIManagerModule().updateNodeSize(getId(), finalWidth, finalHeight));
     }
 }
