@@ -1,5 +1,14 @@
-import {requireNativeComponent} from 'react-native';
+import React from 'react';
+import {requireNativeComponent, ViewStyle} from 'react-native';
 
-const DemoWidget = requireNativeComponent('DemoWidget');
+const DemoWidgetNativeComponent = requireNativeComponent('DemoWidget');
 
-export default DemoWidget;
+interface Props {
+  buttonTitle: string;
+  labelTitle: string;
+  style?: ViewStyle;
+}
+
+export default function DemoWidget(props: Props) {
+  return <DemoWidgetNativeComponent {...props} />;
+}
