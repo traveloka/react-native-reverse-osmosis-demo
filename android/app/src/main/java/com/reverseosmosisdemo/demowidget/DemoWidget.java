@@ -33,4 +33,12 @@ public class DemoWidget extends LinearLayout {
             txtToggled.setVisibility(txtToggled.getVisibility() == GONE ? VISIBLE : GONE);
         });
     }
+
+    public void setButtonTitle(String title) {
+        btnToggle.setText(title);
+    }
+
+    public void setLabelTitle(String title) {
+        txtToggled.setText(title);
+    }
 }

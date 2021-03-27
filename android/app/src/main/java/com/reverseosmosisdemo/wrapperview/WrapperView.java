@@ -9,6 +9,8 @@ import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.UIManagerModule;
 
 public class WrapperView extends LinearLayout {
+    private View contentView;
+
     public WrapperView(Context context) {
         super(context);
     }
@@ -54,16 +56,20 @@ public class WrapperView extends LinearLayout {
         ((ThemedReactContext) getContext()).runOnNativeModulesQueueThread(() -> ((ThemedReactContext) getContext()).getNativeModule(UIManagerModule.class).updateNodeSize(getId(), finalWidth, finalHeight));
     }
 
-    @Override
-    public void addView(View child) {
-        if (child instanceof ViewGroup) {
-            super.addView(child);
+    public void setContentView(View view) {
+        contentView = view;
+
+        if (contentView instanceof ViewGroup) {
+            addView(contentView);
             return;
         }
 
-        // add wrapper if child is a View to fix NPE: `Attempt to read from null array`
-        LinearLayout viewWrapper = new LinearLayout(getContext());
-        viewWrapper.addView(child);
-        super.addView(viewWrapper);
+        LinearLayout contentViewWrapper = new LinearLayout(getContext());
+        contentViewWrapper.addView(contentView);
+        addView(contentViewWrapper);
+    }
+
+    public View getContentView() {
+        return contentView;
     }
 }
