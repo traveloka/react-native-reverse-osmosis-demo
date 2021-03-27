@@ -1,28 +1,16 @@
 package com.reverseosmosisdemo.wrapperview;
 
 import android.content.Context;
-import android.os.Build;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
-
-import androidx.annotation.RequiresApi;
 
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.UIManagerModule;
 
-import java.lang.ref.WeakReference;
-
 public class WrapperView extends LinearLayout {
-    private WeakReference<UIManagerModule> _uiManagerModule;
-
     public WrapperView(Context context) {
         super(context);
-
-        _uiManagerModule = new WeakReference<>(((ThemedReactContext)getContext()).getNativeModule(UIManagerModule.class));
-    }
-
-    private UIManagerModule getUIManagerModule() {
-        return _uiManagerModule.get();
     }
 
     @Override
@@ -39,12 +27,11 @@ public class WrapperView extends LinearLayout {
 
     private final Runnable measureAndLayout = () -> {
         measure(
-            MeasureSpec.makeMeasureSpec(getMeasuredWidth(), MeasureSpec.EXACTLY),
-            MeasureSpec.makeMeasureSpec(getMeasuredHeight(), MeasureSpec.EXACTLY));
-        layout(getLeft(), getTop(), getLeft() + getMeasuredWidth(), getTop() + getMeasuredHeight());
+                MeasureSpec.makeMeasureSpec(getWidth(), MeasureSpec.EXACTLY),
+                MeasureSpec.makeMeasureSpec(getHeight(), MeasureSpec.EXACTLY));
+        layout(getLeft(), getTop(), getRight(), getBottom());
     };
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int maxWidth = 0;
@@ -64,6 +51,19 @@ public class WrapperView extends LinearLayout {
         int finalHeight = Math.max(maxHeight, getSuggestedMinimumHeight());
 
         setMeasuredDimension(finalWidth, finalHeight);
-        ((ThemedReactContext)getContext()).runOnNativeModulesQueueThread(() -> getUIManagerModule().updateNodeSize(getId(), finalWidth, finalHeight));
+        ((ThemedReactContext) getContext()).runOnNativeModulesQueueThread(() -> ((ThemedReactContext) getContext()).getNativeModule(UIManagerModule.class).updateNodeSize(getId(), finalWidth, finalHeight));
+    }
+
+    @Override
+    public void addView(View child) {
+        if (child instanceof ViewGroup) {
+            super.addView(child);
+            return;
+        }
+
+        // add wrapper if child is a View to fix NPE: `Attempt to read from null array`
+        LinearLayout viewWrapper = new LinearLayout(getContext());
+        viewWrapper.addView(child);
+        super.addView(viewWrapper);
     }
 }
