@@ -13,7 +13,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface WrapperView : UIView
 
+- (instancetype)initWithBridge:(RCTBridge *)bridge contentViewController:(UIViewController *)contentViewController;
 - (instancetype)initWithBridge:(RCTBridge *)bridge contentView:(UIView *)contentView;
+- (UIViewController *)getContentViewController;
 - (UIView *)getContentView;
 
 @end

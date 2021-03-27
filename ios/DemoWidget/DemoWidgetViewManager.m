@@ -9,28 +9,24 @@
 #import "DemoWidgetViewController.h"
 #import "WrapperView.h"
 
-@interface DemoWidgetViewManager ()
-@property (strong, nonatomic) NSMutableArray<UIViewController *> *widgets;
-@end
-
 @implementation DemoWidgetViewManager
-
-RCT_EXPORT_MODULE(DemoWidget)
 
 @synthesize bridge = _bridge;
 
-- (NSMutableArray *)widgets {
-  if (!_widgets) {
-    _widgets = [NSMutableArray new];
-  }
-  return _widgets;
+RCT_EXPORT_MODULE(DemoWidget)
+
+RCT_CUSTOM_VIEW_PROPERTY(buttonTitle, NSString *, WrapperView) {
+  DemoWidgetViewController *widgetVC = (DemoWidgetViewController *)[view getContentViewController];
+  [widgetVC setButtonLabel:json];
+}
+
+RCT_CUSTOM_VIEW_PROPERTY(labelTitle, NSString *, WrapperView) {
+  DemoWidgetViewController *widgetVC = (DemoWidgetViewController *)[view getContentViewController];
+  [widgetVC setLabelTitle:json];
 }
 
 - (UIView *)view {
-  DemoWidgetViewController *widgetVC = [DemoWidgetViewController new];
-  [self.widgets addObject:widgetVC]; // retain VC
-
-  return [[WrapperView alloc] initWithBridge:_bridge contentView:widgetVC.view];
+  return [[WrapperView alloc] initWithBridge:_bridge contentViewController:[DemoWidgetViewController new]];
 }
 
 - (dispatch_queue_t)methodQueue {
