@@ -35,9 +35,4 @@ public class DemoWidgetViewGroupManager extends ViewGroupManager<WrapperView> {
         DemoWidget demoWidget = (DemoWidget) view.getContentView();
         demoWidget.setLabelTitle(labelTitle);
     }
-
-    @Override
-    public boolean needsCustomLayoutForChildren() {
-        return true;
-    }
 }

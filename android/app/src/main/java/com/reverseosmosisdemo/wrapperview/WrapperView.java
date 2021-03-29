@@ -2,13 +2,12 @@ package com.reverseosmosisdemo.wrapperview;
 
 import android.content.Context;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import android.widget.FrameLayout;
 
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.uimanager.UIManagerModule;
 
-public class WrapperView extends LinearLayout {
+public class WrapperView extends FrameLayout {
     private View contentView;
 
     public WrapperView(Context context) {
@@ -58,15 +57,7 @@ public class WrapperView extends LinearLayout {
 
     public void setContentView(View view) {
         contentView = view;
-
-        if (contentView instanceof ViewGroup) {
-            addView(contentView);
-            return;
-        }
-
-        LinearLayout contentViewWrapper = new LinearLayout(getContext());
-        contentViewWrapper.addView(contentView);
-        addView(contentViewWrapper);
+        addView(contentView);
     }
 
     public View getContentView() {
