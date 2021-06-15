@@ -20,7 +20,7 @@
   [super viewDidLoad];
   
   self.view.translatesAutoresizingMaskIntoConstraints = NO;
-  [self.view.widthAnchor constraintEqualToConstant:UIScreen.mainScreen.bounds.size.width].active = YES;
+  [self.view.widthAnchor constraintEqualToAnchor:self.view.superview.widthAnchor].active = YES;
 
   self.stackView.translatesAutoresizingMaskIntoConstraints = NO;
   [self.stackView.leftAnchor constraintEqualToAnchor:self.view.leftAnchor].active = YES;
@@ -31,6 +31,14 @@
 
 - (IBAction)onTogglePress:(id)sender {
   self.lblToggled.hidden = !self.lblToggled.isHidden;
+}
+
+- (void)setButtonLabel:(NSString *)label {
+  [_btnToggle setTitle:label forState:UIControlStateNormal];
+}
+
+- (void)setLabelTitle:(NSString *)title {
+  [_lblToggled setText:title];
 }
 
 @end

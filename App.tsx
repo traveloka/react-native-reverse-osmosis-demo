@@ -24,37 +24,49 @@ declare const global: {HermesInternal: null | {}};
 
 const App = () => {
   return (
-    <>
+    <View style={styles.container}>
       <StatusBar barStyle="dark-content" />
       <SafeAreaView>
-        <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          style={styles.scrollView}>
-          <DemoWidget />
-          <View style={styles.box}>
-            <Text style={styles.boxContent}>React Native View</Text>
+        <ScrollView contentInsetAdjustmentBehavior="automatic">
+          <View style={{flexDirection: 'row'}}>
+            <DemoWidget
+              style={{flex: 1}}
+              buttonTitle="Native Button A"
+              labelTitle="Native Label A"
+            />
+            <DemoWidget
+              style={{flex: 1}}
+              buttonTitle="Native Button B"
+              labelTitle="Native Label B"
+            />
           </View>
+          <Text style={[styles.label, {backgroundColor: 'green'}]}>
+            React Native View A
+          </Text>
+          <DemoWidget
+            buttonTitle="Native Button C"
+            labelTitle="Native Label C"
+            style={{margin: 24}}
+          />
+          <Text style={[styles.label, {backgroundColor: 'red'}]}>
+            React Native View B
+          </Text>
         </ScrollView>
       </SafeAreaView>
-    </>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  scrollView: {
-    backgroundColor: '#f5f5f5',
+  container: {
+    flex: 1,
+    backgroundColor: '#474747',
   },
-  box: {
-    height: 100,
-    backgroundColor: '#df4747',
-    alignSelf: 'stretch',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  boxContent: {
+  label: {
     textAlign: 'center',
     color: '#ffffff',
     fontSize: 17,
+    padding: 16,
   },
 });
 

@@ -5,32 +5,28 @@
 //  Created by adrian.hartanto on 05/01/21.
 //
 
-#import <React/RCTUIManager.h>
 #import "DemoWidgetViewManager.h"
 #import "DemoWidgetViewController.h"
-
-@interface DemoWidgetViewManager ()
-@property (strong, nonatomic) NSMutableArray<UIViewController *> *widgets;
-@end
+#import "WrapperView.h"
 
 @implementation DemoWidgetViewManager
 
-RCT_EXPORT_MODULE(DemoWidget)
-
 @synthesize bridge = _bridge;
 
-- (NSMutableArray *)widgets {
-  if (!_widgets) {
-    _widgets = [NSMutableArray new];
-  }
-  return _widgets;
+RCT_EXPORT_MODULE(DemoWidget)
+
+RCT_CUSTOM_VIEW_PROPERTY(buttonTitle, NSString *, WrapperView) {
+  DemoWidgetViewController *widgetVC = (DemoWidgetViewController *)[view getContentViewController];
+  [widgetVC setButtonLabel:json];
+}
+
+RCT_CUSTOM_VIEW_PROPERTY(labelTitle, NSString *, WrapperView) {
+  DemoWidgetViewController *widgetVC = (DemoWidgetViewController *)[view getContentViewController];
+  [widgetVC setLabelTitle:json];
 }
 
 - (UIView *)view {
-  DemoWidgetViewController *widgetVC = [DemoWidgetViewController new];
-  [widgetVC addObserver:self forKeyPath:@"view.bounds" options:NSKeyValueObservingOptionNew context:nil];
-  [self.widgets addObject:widgetVC]; // retain VC to use KVO
-  return widgetVC.view;
+  return [[WrapperView alloc] initWithBridge:_bridge contentViewController:[DemoWidgetViewController new]];
 }
 
 - (dispatch_queue_t)methodQueue {
@@ -39,14 +35,6 @@ RCT_EXPORT_MODULE(DemoWidget)
 
 + (BOOL)requiresMainQueueSetup {
   return NO;
-}
-
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
-  if ([keyPath isEqualToString:@"view.bounds"]) {
-    UIViewController *widget = (UIViewController *)object;
-    CGRect newRect = [change[@"new"] CGRectValue];
-    [_bridge.uiManager setSize:newRect.size forView:widget.view];
-  }
 }
 
 @end
