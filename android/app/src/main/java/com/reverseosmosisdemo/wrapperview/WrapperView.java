@@ -15,12 +15,6 @@ public class WrapperView extends FrameLayout {
     }
 
     @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
-        requestLayout();
-    }
-
-    @Override
     public void requestLayout() {
         super.requestLayout();
         post(measureAndLayout);
