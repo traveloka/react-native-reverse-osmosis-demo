@@ -60,7 +60,7 @@ const App = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#474747',
+    backgroundColor: '#ececec',
   },
   label: {
     textAlign: 'center',
